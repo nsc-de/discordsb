@@ -1,0 +1,27 @@
+{
+  "name": "discordsb",
+  "version": "0.1.0",
+  "description": "Automatically ping via discord on updates of dsbmobile",
+  "main": "dist/index.js",
+  "repository": "https://github.com/nsc-de/discordsb",
+  "author": "Nicolas Schmidt",
+  "license": "BSD-2-Clause",
+  "scripts": {
+    "test": "yon run compile & yon run start",
+    "start": "node -r source-map-support/register dist/index.js",
+    "compile": "tsc"
+  },
+  "dependencies": {
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "discord-api-types": "^0.23.1",
+    "discord.js": "^13.1.0",
+    "dsbapi": "^4.1.0",
+    "js-yaml": "^4.1.0",
+    "nscdb": "^0.1.7"
+  },
+  "devDependencies": {
+    "source-map-support": "^0.5.20",
+    "typescript": "^4.4.3",
+    "yarn-or-npm": "^3.0.1"
+  }
+}
