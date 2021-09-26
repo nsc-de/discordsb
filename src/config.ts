@@ -6,6 +6,9 @@ const defaultConfigPath = join(__dirname, "..", "config.yml");
 
 export class Config {
   readonly credentials: CredentialsConfig = new CredentialsConfig(this);
+  readonly dsb_credentials: DSBCredentialsConfig = new DSBCredentialsConfig(
+    this
+  );
   constructor(public readonly storage: Database) {}
   save(): Promise<Config> {
     return this.storage.saveData().then(() => this);
@@ -30,6 +33,37 @@ export class CredentialsConfig {
   }
 }
 
+export class DSBCredentialsConfig {
+  constructor(readonly config: Config) {}
+
+  public get storage(): Database {
+    return this.config.storage;
+  }
+
+  public get user(): string | null {
+    return (this.storage.get("dsb_credentials") as DatabaseObject).get(
+      "user"
+    ) as string | null;
+  }
+  public set user(token: string | null) {
+    (this.storage.get("dsb_credentials") as DatabaseObject).set("user", token);
+    this.config.save();
+  }
+
+  public get password(): string | null {
+    return (this.storage.get("dsb_credentials") as DatabaseObject).get(
+      "password"
+    ) as string | null;
+  }
+  public set password(token: string | null) {
+    (this.storage.get("dsb_credentials") as DatabaseObject).set(
+      "password",
+      token
+    );
+    this.config.save();
+  }
+}
+
 interface ConfigurationCreationOptions {
   path?: string;
 }
@@ -43,6 +77,10 @@ export async function createConfig(
   // Set defaults
   config.setDefaults({
     credentials: { token: null },
+    dsb_credentials: {
+      user: null,
+      password: null,
+    },
   });
 
   const cfg = new Config(config);

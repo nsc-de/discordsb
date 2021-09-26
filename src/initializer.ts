@@ -1,5 +1,6 @@
 import { init as initConfig } from "./config";
 import { init as initToken } from "./token";
+import { init as initDSB } from "./dsb";
 
 export interface InitializerOptions {
   configPath?: string;
@@ -7,5 +8,6 @@ export interface InitializerOptions {
 
 export default async function init(options?: InitializerOptions) {
   await initConfig({ path: options?.configPath });
-  initToken();
+  await initToken();
+  await initDSB();
 }
