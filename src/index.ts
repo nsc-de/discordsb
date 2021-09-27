@@ -203,11 +203,12 @@ async function tick() {
   await Promise.all(
     database.guilds.map(async (g) => {
       const guild = await client.guilds.fetch(g.id);
-      const mappedData = data.map((e) => ({
-        ...e,
-        role: guild.roles.cache.find((role) => role.name === e.subgroup),
-      }));
-      // .filter((e) => !!e.role);
+      const mappedData = data
+        .map((e) => ({
+          ...e,
+          role: guild.roles.cache.find((role) => role.name === e.subgroup),
+        }))
+        .filter((e) => e.group == "12");
       await Promise.all(
         g.settings.dsb_dump.map(async (c) => {
           const channel = (await client.channels.fetch(
