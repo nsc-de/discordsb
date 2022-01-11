@@ -13,6 +13,8 @@ import { fetchRemappedData } from "./dsb";
 import init from "./initializer";
 import { token as Token } from "./token";
 import { database } from "./database";
+import logger from "./logging";
+
 Error.stackTraceLimit = Infinity;
 
 const guilds: Guild[] = [];
@@ -41,7 +43,7 @@ const rest = new REST({ version: "9" });
 
 async function initGuild(guild: Guild) {
   if (!database.guilds.has(guild)) {
-    console.log(`Found and added new guild ${guild.id}`);
+    logger.info(`Found and added new guild ${guild.id}`);
     database.guilds.addGuild(guild);
   }
   try {
@@ -52,7 +54,7 @@ async function initGuild(guild: Guild) {
       }
     );
   } catch (error) {
-    console.error(error);
+    logger.error(error);
   }
 }
 
@@ -66,11 +68,6 @@ client.on("ready", async () => {
     promises.push(...(stuff.filter((e) => !!e) as Promise<any>[]));
 
   // List guilds to console
-  console.log(
-    `Logged in as ${client.user?.id} (${client.user?.tag})! I am on ${
-      guilds.length
-    } guild${guilds.length != 1 ? "s" : ""}:`
-  );
   aw(
     Promise.all([
       await Promise.all(
@@ -82,7 +79,13 @@ client.on("ready", async () => {
               ).tag
             })`
         )
-      ).then((e) => console.log(e.join("\n"))),
+      ).then((e) =>
+        logger.info(
+          `Logged in as ${client.user?.id} (${client.user?.tag})! I am on ${
+            guilds.length
+          } guild${guilds.length != 1 ? "s" : ""}:\n${e.join("\n")}`
+        )
+      ),
     ])
   );
 
@@ -113,7 +116,7 @@ client.on("interactionCreate", async (interaction) => {
       interaction.reply(
         `Initialized DSB dump channel ${interaction.channelId}`
       );
-      console.log(
+      logger.info(
         `Initialized DSB dump channel ${interaction.channelId} (#${
           (interaction.channel! as TextChannel).name
         }) on guild ${interaction.guildId} (${interaction.guild!.name})`
@@ -270,7 +273,3 @@ async function tick() {
 const timeout = (time: number) => new Promise((rs) => setTimeout(rs, time));
 
 export { client };
-
-process.on("uncaughtException", (err) => {
-  console.error("There was an uncaught error", err.stack);
-});

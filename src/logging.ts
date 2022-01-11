@@ -47,6 +47,6 @@ const Logger = winston.createLogger({
   exitOnError: false,
 });
 
-Logger.info('Writing logs into file "%s"', path.resolve(logfile));
+Logger.info(`Writing logs into file "${path.resolve(logfile)}"`);
 
 export default Logger;
