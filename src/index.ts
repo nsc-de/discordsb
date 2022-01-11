@@ -270,3 +270,7 @@ async function tick() {
 const timeout = (time: number) => new Promise((rs) => setTimeout(rs, time));
 
 export { client };
+
+process.on("uncaughtException", (err) => {
+  console.error("There was an uncaught error", err.stack);
+});
